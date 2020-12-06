@@ -1,0 +1,21 @@
+{
+  "name": "miragemanager",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev_start": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.3",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "express-validator": "^6.3.1",
+    "grpc": "^1.24.2",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.7",
+    "nodemon": "^2.0.2",
+    "shelljs": "^0.8.3"
+  }
+}

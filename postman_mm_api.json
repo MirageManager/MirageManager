@@ -1,0 +1,953 @@
+{
+	"info": {
+		"_postman_id": "fcbabb67-b4d7-4da9-8048-75daae88c389",
+		"name": "thesis",
+		"description": "# Introduction\nThe MirageManager API allows a user to make calls\nto run, suspend and resume Unikerenls on remote machines through a centralized server.\n\n# Authentication\nUsing the login endpoint the admin user can login\nusing a name and apssword combination and in return \nrecieves a JWT token, which will be valid for the amount of time defined in the server confing.\n\n# Structure\nThe API is organized into 3 major top level paths.\n* Login provides the login endpoint\n* Images returns a list of images available to this instance of MirageManager\n* Hosts is the root to all other of entities within MirageManager. \n\t* Hosts represent machines running Xen.\n\t* On each host an arbitrary number of unikernels can run.\n\t* Each unikernel has a state, which it can write to the MirageManager repository",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "host",
+			"item": [
+				{
+					"name": "unikernel",
+					"item": [
+						{
+							"name": "state",
+							"item": [
+								{
+									"name": "store",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{unikernel_auth_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\t\n\t\"action\": \"migrate\",\n\t\"store\": {\n\t\t\"count\": 113\n\t}\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:unikernel_id/states",
+											"protocol": "http",
+											"host": [
+												"{{base_url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"hosts",
+												":host_id",
+												"unikernels",
+												":unikernel_id",
+												"states"
+											],
+											"variable": [
+												{
+													"key": "host_id",
+													"value": "{{host_id}}"
+												},
+												{
+													"key": "unikernel_id",
+													"value": "{{unikernel_id}}"
+												}
+											]
+										},
+										"description": "Called by a unikernel to write it's store to the repository, i.e.: \n```json\n{\t\n\t\"action\": \"migrate\",\n\t\"store\": {\n\t\t\"count\": 113\n\t}\n}\n```"
+									},
+									"response": []
+								},
+								{
+									"name": "store_latest",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{unikernel_auth_token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:unikernel_id/states/latest",
+											"protocol": "http",
+											"host": [
+												"{{base_url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"hosts",
+												":host_id",
+												"unikernels",
+												":unikernel_id",
+												"states",
+												"latest"
+											],
+											"variable": [
+												{
+													"key": "host_id",
+													"value": "{{host_id}}"
+												},
+												{
+													"key": "unikernel_id",
+													"value": "{{unikernel_id}}"
+												}
+											]
+										},
+										"description": "Retrieve the latest store of the unikernel identified by the path parameters."
+									},
+									"response": []
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "unikernel",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											"pm.environment.set(\"unikernel_id\", pm.response.json().id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"image\": \"dynamic_configuration_unikernel\",\n\t\"name\": \"test\",\n\t\"network_info\": {\n\t\t\"dhcp\": false,\n\t\t\"ip\": \"172.24.24.79/23\",\n\t\t\"dns\": \"131.159.254.1\",\n\t\t\"gateway\": \"172.24.25.254\"\t\t\n\t}\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": "{{host_id}}"
+										}
+									]
+								},
+								"description": "Create a new unikernel with the given name on a remote host for a specified image. Also allows to specify network configuration for a host, i.e.:\n```json\n{\n\t\"image\": \"dynamic_configuration_unikernel\",\n\t\"name\": \"test\",\n\t\"network_info\": {\n\t\t\"dhcp\": false,\n\t\t\"ip\": \"172.24.24.79/23\",\n\t\t\"dns\": \"131.159.254.1\",\n\t\t\"gateway\": \"172.24.25.254\"\t\t\n\t}\n}\n\n```\nWhen dhcp is true, no further information is required."
+							},
+							"response": []
+						},
+						{
+							"name": "unikernel/:id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:unikernel_id",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels",
+										":unikernel_id"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": ""
+										},
+										{
+											"key": "unikernel_id",
+											"value": ""
+										}
+									]
+								},
+								"description": "Endpoint to delete a unikernels representation for the host for identified by path prameters. Does not destroy the guest domain!"
+							},
+							"response": []
+						},
+						{
+							"name": "unikernel/:id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											"pm.environment.set(\"unikernel_id\", pm.response.json().id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:unikernel_id",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels",
+										":unikernel_id"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": "{{host_id}}"
+										},
+										{
+											"key": "unikernel_id",
+											"value": "{{unikernel_id}}"
+										}
+									]
+								},
+								"description": "Get information on the unikernel identified by path parameters."
+							},
+							"response": []
+						},
+						{
+							"name": "unikernels",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": "{{host_id}}"
+										}
+									]
+								},
+								"description": "Get information on all unikernels for the host identified by path parameters."
+							},
+							"response": []
+						},
+						{
+							"name": "unikernel/:id/suspend",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:id/suspend",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels",
+										":id",
+										"suspend"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": "{{host_id}}"
+										},
+										{
+											"key": "id",
+											"value": "{{unikernel_id}}"
+										}
+									]
+								},
+								"description": "Suspend the unikernel identified by path parameters. This will destroy the guest, but the state is stored."
+							},
+							"response": []
+						},
+						{
+							"name": "unikernel/:id/stop",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:id/stop",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels",
+										":id",
+										"stop"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": "{{host_id}}"
+										},
+										{
+											"key": "id",
+											"value": "{{unikernel_id}}"
+										}
+									]
+								},
+								"description": "Suspend the unikernel identified by path parameters. This destroys the guest and no state is stored."
+							},
+							"response": []
+						},
+						{
+							"name": "unikernel/:id/resume",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"host\": \"xen-box\",\n\t\"network_info\": {\n\t\t\"dhcp\": true\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:id/resume",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels",
+										":id",
+										"resume"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": "{{host_id}}"
+										},
+										{
+											"key": "id",
+											"value": "{{unikernel_id}}"
+										}
+									]
+								},
+								"description": "Resumes the unikernel identified by path parameters, if the unikernel was suspended before."
+							},
+							"response": []
+						},
+						{
+							"name": "unikernel/:id/migrate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "a1b61246-9d33-4874-b047-81c576329607",
+										"exec": [
+											"pm.environment.set(\"ms_ts\", Date.now());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin_auth_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"host\": \"vega\",\n\t\"network_info\": {\n\t\t\"dhcp\": false,\n\t\t\"ip\": \"172.24.24.80/23\",\n\t\t\"dns\": \"131.159.254.1\",\n\t\t\"gateway\": \"172.24.25.254\"\t\t\n\t}\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{base_url}}:{{port}}/hosts/:host_id/unikernels/:id/migrate",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"hosts",
+										":host_id",
+										"unikernels",
+										":id",
+										"migrate"
+									],
+									"variable": [
+										{
+											"key": "host_id",
+											"value": "{{host_id}}"
+										},
+										{
+											"key": "id",
+											"value": "{{unikernel_id}}"
+										}
+									]
+								},
+								"description": "Resumes the unikernel on the host defined by path parameters and resumes it on the host defined in the payload, i.e.:\n\n```json\n{\n\t\"host\": \"vega\",\n\t\"network_info\": {\n\t\t\"dhcp\": false,\n\t\t\"ip\": \"172.24.24.80/23\",\n\t\t\"dns\": \"131.159.254.1\",\n\t\t\"gateway\": \"172.24.25.254\"\t\t\n\t}\n}\n```"
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "hosts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+								"exec": [
+									"pm.environment.set(\"unikernel_id\", pm.response.json().id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"host\": \"xen-box\",\n\t\"uri\": \"192.168.178.28:50501\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{base_url}}:{{port}}/hosts",
+							"protocol": "http",
+							"host": [
+								"{{base_url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"hosts"
+							]
+						},
+						"description": "Create new host, as defined by the payload, i.e.:\n```json\n{\n\t\"host\": \"xen-box\",\n\t\"uri\": \"192.168.178.28:50501\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "hosts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+								"exec": [
+									"pm.environment.set(\"host_id\", pm.response.json()[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{base_url}}:{{port}}/hosts",
+							"protocol": "http",
+							"host": [
+								"{{base_url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"hosts"
+							]
+						},
+						"description": "Get information on all existing hosts"
+					},
+					"response": []
+				},
+				{
+					"name": "host",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e35b3cc3-4ade-45fb-b879-4a305b8180bd",
+								"exec": [
+									"pm.environment.set(\"unikernel_id\", pm.response.json().id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{base_url}}:{{port}}/host/:host_name",
+							"protocol": "http",
+							"host": [
+								"{{base_url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"host",
+								":host_name"
+							],
+							"variable": [
+								{
+									"key": "host_name",
+									"value": "xen-box"
+								}
+							]
+						},
+						"description": "Deregister a host. Will delete it and close gRPC connection."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "login",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "de9a953f-fc88-43db-aa04-19e3cdbcde9d",
+								"exec": [
+									"pm.environment.set(\"admin_auth_token\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{admin_user}}\",\n\t\"password\": \"{{admin_pw}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{base_url}}:{{port}}/login",
+							"protocol": "http",
+							"host": [
+								"{{base_url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"login"
+							]
+						},
+						"description": "Endpoint to login the admin user."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "images",
+			"item": [
+				{
+					"name": "images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{unikernel_auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{base_url}}:{{port}}/images",
+							"protocol": "http",
+							"host": [
+								"{{base_url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"images"
+							]
+						},
+						"description": "Returns a list on all images available to that instance of MirageManger."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "467d38d6-d098-4ea5-9c94-cf94bce44ffe",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d83514bd-8ded-48b3-81da-c43e91acf29f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

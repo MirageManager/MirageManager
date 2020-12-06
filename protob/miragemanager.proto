@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package mirageManager;
+
+service Host {
+  rpc runUnikernel (runRequest) returns (createResponse) {}
+  rpc suspendUnikernel (xenStoreRequest) returns (empty) {}
+  rpc migrateUnikernel (xenStoreRequest) returns (empty) {}
+  rpc destroyUnikernel (xenStoreRequest) returns (empty) {}
+  rpc downloadImage (imageRequest) returns (empty) {}
+  rpc go (xenStoreRequest) returns (empty) {}
+}
+
+message runRequest {
+  string name = 1;
+  string ip = 2;
+  string gateway = 3;
+  string dns = 4;
+  string repo = 5;
+  string token = 6;
+  string image = 7;
+  bool migration = 8;
+  bool dhcp = 9;
+  string unikernel_id = 10;
+  string host_id= 11;
+}
+
+message xenStoreRequest {
+  string name = 1;
+  int32 domID = 2;
+}
+
+message createResponse {
+  int32 domID = 1;
+}
+
+message empty {}
+
+message imageRequest {
+  string name = 1;
+  string git = 2;
+}

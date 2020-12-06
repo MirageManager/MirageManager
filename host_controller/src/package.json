@@ -1,0 +1,21 @@
+{
+  "name": "host_worker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.3",
+    "dotenv": "^8.2.0",
+    "grpc": "^1.24.2",
+    "jsonwebtoken": "^8.5.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.8",
+    "shelljs": "^0.8.3",
+    "yargs": "^15.1.0"
+  }
+}

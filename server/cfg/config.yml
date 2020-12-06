@@ -1,0 +1,36 @@
+mirage_manager:
+  # URL of the git repo holding the image list
+  image_repo_git: git@gitlab.lrz.de:ga27pag/unikernel-repository.git
+  # File the image list is gonna be stored int
+  image_repo_path: /Users/oliver/repo/main.json
+  migration:
+    # Boost enables caching that circumvents authentication
+    boost: false
+    # Number of polling retries when waiting for a unikernel to be ready at migration
+    retries: 10
+    # Timeout between tries
+    timeout_ms: 1000
+database:
+  # Mongo URL
+  mongo_uri: mongodb://localhost:27017/miragemanager
+logging:
+  log_level: debug
+webserver:
+  # URL of the machine the application server is running on
+  base_url: 172.24.24.29
+  # The port it is running on
+  port: 8080
+  # Enable TLS (Not supported by the mirage os request lib so far)
+  tls: false
+  # TLS Params only need to be set, when tls is true (-> opt)
+  ssl_passphrase: opt ${SSL_PASSPHRASE}
+  ssl_key: opt ${SSL_KEY}
+  ssl_cert: opt ${SSL_CERT}
+authentication:
+  # How long the JWT is valid
+  admin_session_duration_s: 1800
+  # Username and password for admin user
+  admin_user: ${ADMIN_USER}
+  admin_pw: ${ADMIN_PW}
+  # Key for signing JWTs
+  jwt_key: ${JWT_KEY}
