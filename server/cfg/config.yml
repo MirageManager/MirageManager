@@ -1,8 +1,8 @@
 mirage_manager:
   # URL of the git repo holding the image list
-  image_repo_git: git@gitlab.lrz.de:ga27pag/unikernel-repository.git
+  image_repo_git: https://github.com/MirageManager/UnikernelRepository.git
   # File the image list is gonna be stored int
-  image_repo_path: /Users/oliver/repo/main.json
+  image_repo_path: /home/name/path/to/file/main.json
   migration:
     # Boost enables caching that circumvents authentication
     boost: false
